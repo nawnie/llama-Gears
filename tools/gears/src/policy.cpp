@@ -53,6 +53,10 @@ Decision classify(const ModelMetadata & model) {
         }
         prism |= type == 142 || type == 143;
     }
+    if (model.architecture == "qwen4exp" || model.architecture == "qwen4exp-mtp") {
+        return { Gear::Standard, Readiness::Unverified,
+            "Qwen3.8 Flash-Next qwen4exp is not supported by this Prism baseline; loader port and model tests required" };
+    }
     if (!is_known_architecture(model.architecture)) {
         return { Gear::Standard, Readiness::Unverified,
             "Architecture not in Gears preflight allowlist; leave execution to original llama.cpp loader" };

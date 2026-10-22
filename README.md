@@ -2,7 +2,7 @@
 
 llama-Gears is an experimental fork of [PrismML llama.cpp](https://github.com/PrismML-Eng/llama.cpp), originally derived from [ggml-org/llama.cpp](https://github.com/ggml-org/llama.cpp). One GGML with multiple execution modes is the intended architecture.
 
-The **opt-in metadata inspector** identifies standard models, Prism private Bonsai tensors, and hybrid-MoE candidates (Qwen3-Next / Nemotron-H). It does not yet implement Strata-style expert caching or new kernels. Existing Prism loaders and binaries are unaffected by default.
+The **opt-in metadata inspector** identifies standard models, Prism private Bonsai tensors, and hybrid-MoE candidates (Qwen3-Next / Nemotron-H). Qwen3.8 Flash-Next uses qwen4exp, which is not present in this Prism baseline and is explicitly reported as unverified. It does not yet implement Strata-style expert caching or new kernels. Existing Prism loaders and binaries are unaffected by default.
 
 See [tools/gears/README.md](tools/gears/README.md) and [ATTRIBUTION.md](ATTRIBUTION.md). Original Prism documentation is preserved below.
 

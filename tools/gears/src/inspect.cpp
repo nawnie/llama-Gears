@@ -71,5 +71,7 @@ int main(int argc, char ** argv) {
         static_cast<unsigned long long>(metadata.expert_count),
         static_cast<unsigned long long>(metadata.active_experts));
     gguf_free(ctx);
-    return result.readiness == llama_gears::Readiness::Invalid ? 3 : 0;
+    if (result.readiness == llama_gears::Readiness::Invalid) return 3;
+    if (result.readiness == llama_gears::Readiness::Unverified) return 4;
+    return 0;
 }

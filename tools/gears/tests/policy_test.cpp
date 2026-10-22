@@ -19,6 +19,8 @@ int main() {
     test({"nemotron_h_moe", {10}, 0, 0}, Gear::Standard, Readiness::Unverified);
     test({"qwen3next", {42}, 12, 13}, Gear::Standard, Readiness::Unverified);
     test({"unknown-future", {12}, 0, 0}, Gear::Standard, Readiness::Unverified);
+    test({"qwen4exp", {42}, 512, 10}, Gear::Standard, Readiness::Unverified);
+    test({"qwen4exp-mtp", {42}, 512, 10}, Gear::Standard, Readiness::Unverified);
     test({"llama", {999}, 0, 0}, Gear::Standard, Readiness::Invalid);
     test({"llama", {43}, 0, 0}, Gear::Standard, Readiness::Invalid);
     test({"llama", {4}, 0, 0}, Gear::Standard, Readiness::Invalid);
@@ -27,6 +29,6 @@ int main() {
     test({"nemotron", {12}, 0, 0}, Gear::Standard, Readiness::MetadataOnly);
     test({"qwen35moe", {12}, 200, 8}, Gear::Standard, Readiness::MetadataOnly);
     if (failures) return EXIT_FAILURE;
-    std::cout << "15 metadata routing tests passed\n";
+    std::cout << "17 metadata routing tests passed\n";
     return EXIT_SUCCESS;
 }
