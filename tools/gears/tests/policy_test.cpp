@@ -1,12 +1,15 @@
 #include "llama_gears/policy.hpp"
-#include <cassert>
+#include <cstdlib>
 #include <iostream>
 using namespace llama_gears;
 int main() {
-    const auto test = [](const ModelMetadata & m, Gear g, Readiness s) {
+    int failures = 0;
+    const auto test = [&](const ModelMetadata & m, Gear g, Readiness s) {
         const Decision d = classify(m);
-        assert(d.gear == g);
-        assert(d.readiness == s);
+        if (d.gear != g || d.readiness != s) {
+            std::cerr << "Routing mismatch for architecture: " << m.architecture << "\n";
+            ++failures;
+        }
     };
     test({"llama", {12}, 0, 0}, Gear::Standard, Readiness::MetadataOnly);
     test({"qwen35", {142}, 0, 0}, Gear::Prism, Readiness::MetadataOnly);
@@ -23,5 +26,7 @@ int main() {
     test({"llama", {}, 0, 0}, Gear::Standard, Readiness::Invalid);
     test({"nemotron", {12}, 0, 0}, Gear::Standard, Readiness::MetadataOnly);
     test({"qwen35moe", {12}, 200, 8}, Gear::Standard, Readiness::MetadataOnly);
+    if (failures) return EXIT_FAILURE;
     std::cout << "15 metadata routing tests passed\n";
+    return EXIT_SUCCESS;
 }
