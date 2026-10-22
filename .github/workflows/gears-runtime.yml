@@ -1,0 +1,40 @@
+name: Gears runtime CPU verification
+on:
+  push:
+    branches: [gears/v2-moe-runtime]
+    paths:
+      - tools/gears/**
+      - tools/CMakeLists.txt
+      - .github/workflows/gears-runtime.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  runtime:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Configure CPU reference build
+        run: >-
+          cmake -S . -B build-gears -DBUILD_SHARED_LIBS=ON
+          -DCMAKE_BUILD_TYPE=Release -DGGML_CUDA=OFF -DGGML_NATIVE=OFF
+          -DGGML_BLAS=OFF -DGGML_LLAMAFILE=OFF -DLLAMA_OPENSSL=OFF
+          -DLLAMA_BUILD_UI=OFF -DLLAMA_BUILD_SERVER=OFF -DLLAMA_BUILD_APP=OFF
+          -DLLAMA_BUILD_EXAMPLES=OFF -DLLAMA_BUILD_TESTS=ON
+          -DLLAMA_GEARS_RUNTIME=ON -DLLAMA_GEARS_INSPECT=ON
+      - name: Compile native runtime and tests
+        run: >-
+          cmake --build build-gears --config Release --parallel 2 --target
+          ggml-gears llama-gears-runtime-test llama-gears-runtime-cache-test
+          llama-gears-policy-test
+      - name: Run native CPU parity and cache tests
+        run: ctest --test-dir build-gears -C Release -R llama-gears --output-on-failure
+      - name: Run existing Python benchmark tests
+        run: python -m unittest discover -s tools/gears/tests -p test_bench.py -v
