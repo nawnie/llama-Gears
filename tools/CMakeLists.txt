@@ -45,3 +45,9 @@ else()
     endif()
     add_subdirectory(results)
 endif()
+
+# Optional metadata-only Gears preflight. Existing Prism builds remain unchanged.
+option(LLAMA_GEARS_INSPECT "llama: build Gears GGUF preflight inspector" OFF)
+if (LLAMA_GEARS_INSPECT)
+    add_subdirectory(gears)
+endif()
